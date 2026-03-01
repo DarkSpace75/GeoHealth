@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Find Doctor Near You</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+  <style>
+    /* Your existing CSS styles */
+       body {
+      background-image: url("/media/21026068.jpg"); /* Replace 'your-image-url.jpg' with the URL of your background image */
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+      .overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(128, 128, 128, 0.4); /* Adjust the opacity (last value) as needed */
+}
+      h1 {
+  text-align: center; /* Center align the text */
+  margin-top: 20px; /* Add some top margin for spacing */
+}
+      form {
+        opacity: 0.80;
+        background: #faf9f6;
+        max-width: 1200px; /* Adjust the maximum width of the form as needed */
+        margin: 0 auto; /* This will center the form horizontally */
+        padding: 20px;
+        margin-top: 100px
+      }
+      .output {
+    opacity: 0.80;
+        background: #faf9f6;
+        max-width: 1200px; /* Adjust the maximum width of the form as needed */
+        margin: 0 auto; /* This will center the form horizontally */
+        padding: 20px;
+        margin-top: 10px
+      }
+    .form-group {
+      margin-bottom: 20px;
+        margin-left: 50px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+
+    .form-group select {
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 16px;
+    }
+
+    .form-line {
+      display: flex;
+      align-items: center;
+    }
+
+    .form-line .form-group {
+      margin-right: 20px;
+    }
+
+    .error-message {
+      color: red;
+      font-size: 14px;
+      margin-top: 5px;
+    }
+      .pred{
+          font-weight: bold;
+          color: #C2073D;
+          font-size: x-large;
+      }
+  </style>
+</head>
+<body>
+<div class="overlay"></div>
+
+
+<form id="myForm" method="post" action="#">
+    <h1>Symptom-based Diagnosis and Doctor Locator Platform</h1>
+    {% csrf_token %}
+  <div class="form-line">
+    <div class="form-group">
+      <label for="select1">Symptom 1:</label>
+      <select id="select1" name="select1" class="select2">
+        {% for value in listSymps %}
+          <option value="{{ value }}">{{ value }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="select2">Symptom 2:</label>
+      <select id="select2" name="select2" class="select2">
+        {% for value in listSymps %}
+          <option value="{{ value }}">{{ value }}</option>
+        {% endfor %}
+      </select>
+    </div>
+  </div>
+
+  <div class="form-line">
+    <div class="form-group">
+      <label for="select3">Symptom 3:</label>
+      <select id="select3" name="select3" class="select2">
+        {% for value in listSymps %}
+          <option value="{{ value }}">{{ value }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="select4">Symptom 4:</label>
+      <select id="select4" name="select4" class="select2">
+        {% for value in listSymps %}
+          <option value="{{ value }}">{{ value }}</option>
+        {% endfor %}
+      </select>
+    </div>
+  </div>
+    <div class="form-line">
+        <div class="form-group">
+      <label for="select5">Symptom 5:</label>
+      <select id="select5" name="select5" class="select2">
+        {% for value in listSymps %}
+          <option value="{{ value }}">{{ value }}</option>
+        {% endfor %}
+      </select>
+    </div>
+        <div class="form-group">
+      <label for="select6">City:</label>
+      <select id="select6" name="select6" class="select2">
+        {% for value in listCity %}
+          <option value="{{ value }}">{{ value }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+  </div>
+  
+    <div class="form-line">
+        <div class="form-group">
+      <label for="select7">Zip Code:</label>
+      <input type="number" id="zipcode" name="zipcode" min="10000" max="99999" />
+      
+
+    </div>
+        
+
+  </div>
+
+    
+    <!--<div class="form-line">
+    <div class="form-group">
+      <label for="select5">City:</label>
+      <select id="select5" name="select5" class="select2">
+        {% for value in listSymps %}
+          <option value="{{ value }}">{{ value }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="select6">Symptom 5:</label>
+      <select id="select6" name="select6" class="select2">
+        {% for value in listSymps %}
+          <option value="{{ value }}">{{ value }}</option>
+        {% endfor %}
+      </select>
+    </div>
+  </div>-->
+    
+
+  <div class="form-line">
+        <div class="form-group">
+  <input type="submit" value="Submit">
+        </div>
+    </div>
+    <div id="errorContainer" class="error-message" style="display:none;">
+  Please select different options for each select field.
+</div>
+</form>
+
+
+<!-- Display the prediction -->
+    {% if pred %}
+        <div class="output">
+        <h2>Prediction:</h2>
+        <p class="pred">{{ pred }}</p>
+    
+
+    <!-- Provide download link for the CSV file response -->
+    {% if response1 %}
+        <h2>Download Nearest Doctors List:</h2>
+        <a href={{response1}} >Download CSV</a>
+        <h2>Download all Doctors List:</h2>
+        <a href={{response2}} >Download CSV</a>
+        <script>
+            function downloadCSV() {
+                // Create a blob from the CSV data
+                var blob = new Blob([{{ response }}], {type: 'text/csv'});
+                var url = window.URL.createObjectURL(blob);
+
+                // Create a temporary link and click it to trigger the download
+                var a = document.createElement('a');
+                a.href = url;
+                a.download = 'data.csv';
+                document.body.appendChild(a);
+                a.click();
+
+                // Clean up
+                window.URL.revokeObjectURL(url);
+                document.body.removeChild(a);
+            }
+        
+        </script>
+    {% endif %}
+    </div>
+    {% endif %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+<script>
+  $(document).ready(function() {
+    $('.select2').select2();
+    validateSelections(); // Trigger validation on page load
+    
+    $('.select2').change(function() {
+      validateSelections(); // Trigger validation when select fields change
+    });
+    
+    function validateSelections() {
+      var selectedValues = [];
+      var duplicateFound = false;
+      
+      $('.select2').each(function() {
+        var value = $(this).val();
+        if (value !== '') {
+          if (selectedValues.includes(value)) {
+            duplicateFound = true;
+            return false; // Exit the loop early
+          } else {
+            selectedValues.push(value);
+          }
+        }
+      });
+      
+      if (duplicateFound) {
+        $('#errorContainer').show(); // Show error message
+        $('input[type="submit"]').prop('disabled', true); // Disable submit button
+      } else {
+        $('#errorContainer').hide(); // Hide error message if no duplicates found
+        $('input[type="submit"]').prop('disabled', false); // Enable submit button
+      }
+    }
+  });
+ 
+</script>
+
+</body>
+</html>
