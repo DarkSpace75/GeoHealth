@@ -1,17 +1,21 @@
-# Profile Parsing - Career Navigator
+# Symptom-based Diagnosis and Doctor Locator Platform
 
-A web-based tool that allows users to upload resumes and parse career profiles with a clean, modern UI.
+A Django-powered web app that allows users to select symptoms and location details to get predictions and download doctor lists.
 
 ## Features
-- Upload resumes in supported formats
-- Parse and visualize career data
-- Interactive gauge and styled UI with gradient background
+- Select up to 5 symptoms
+- Choose city and zip code
+- Get diagnosis predictions
+- Download nearest and full doctor lists in CSV format
+- Modern UI with Select2 dropdowns and gradient background
 
 ## Tech Stack
+- Django (Python)
 - HTML5, CSS3
-- JavaScript (optional backend integration)
+- jQuery, Select2
 
 ## Setup
 1. Clone the repo:
    ```bash
    git clone https://github.com/DarkSpace75/ResumeParser.git
+   cd ResumeParser
